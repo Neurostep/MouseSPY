@@ -1,16 +1,15 @@
 (function($, w) {
 	var collectTimeout, sendTimeout, storage = [], errorCount = 0;
 	MouseSPY = {
-		config: {},
+		config: {
+			url: "",
+			collectTimeout: 30,
+			sendTimeout: 10000,
+			method: "POST",
+			maxErrorCounts: 5
+		},
 		init: function(config) {
-			config = $.extend(true, {
-				url: "",
-				collectTimeout: 30,
-				sendTimeout: 10000,
-				method: "POST",
-				maxErrorCounts: 5
-			}, config);
-			this.config = config;
+			$.extend(true, this.config, config);
 			return this;
 		},
 		start: function() {
@@ -32,7 +31,6 @@
 					this.start();
 				}.bind(this))
 				.fail(function(response) {
-					clearTimeout(collectTimeout);
 					errorCount++;
 					if (errorCount >= this.config.maxErrorCounts) {
 						this.stop();
